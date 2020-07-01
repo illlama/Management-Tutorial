@@ -8,6 +8,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  CircularProgress,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -20,16 +21,26 @@ const styles = (theme) => ({
   table: {
     minWidth: 1080,
   },
+  progress: {
+    margin: theme.spacing(2),
+  },
 });
 
 const App = (styles) => {
   const [customers, setCustomers] = useState('');
+  const [completed, setCompleted] = useState(0);
+
   const callApi = async () => {
     const response = await fetch('/api/customers');
     const body = await response.json();
     return body;
   };
+  const progress = () => {
+    setCompleted((completed) => (completed >= 100 ? 0 : completed + 1));
+  };
+
   useEffect(() => {
+    setInterval(progress, 15);
     callApi()
       .then((res) => setCustomers(res))
       .catch((err) => console.log(err));
@@ -49,11 +60,21 @@ const App = (styles) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {customers
-            ? customers.map((customer) => {
-                return <Customer key={customer.id} {...customer} />;
-              })
-            : ''}
+          {customers ? (
+            customers.map((customer) => {
+              return <Customer key={customer.id} {...customer} />;
+            })
+          ) : (
+            <TableRow>
+              <TableCell colSpan="6" align="center">
+                <CircularProgress
+                  className={styles.classes.progress}
+                  variant="determinate"
+                  value={completed}
+                />
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
     </Paper>
