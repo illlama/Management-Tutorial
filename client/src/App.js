@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import Customer from './components/Customer';
 import {
@@ -14,7 +14,7 @@ import { withStyles } from '@material-ui/core/styles';
 const styles = (theme) => ({
   root: {
     width: '100%',
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing(3),
     overflowX: 'auto',
   },
   table: {
@@ -22,34 +22,19 @@ const styles = (theme) => ({
   },
 });
 
-const customers = [
-  {
-    id: 1,
-    image: 'https://placeimg.com/64/64/1',
-    name: '홍길동',
-    birthday: 19931221,
-    gender: 'male',
-    job: 'developer',
-  },
-  {
-    id: 2,
-    image: 'https://placeimg.com/64/64/2',
-    name: '정하루',
-    birthday: 19981211,
-    gender: 'female',
-    job: 'developer',
-  },
-  {
-    id: 3,
-    image: 'https://placeimg.com/64/64/3',
-    name: '판다킴',
-    birthday: 19921121,
-    gender: 'female',
-    job: 'developer',
-  },
-];
-
 const App = (styles) => {
+  const [customers, setCustomers] = useState('');
+  const callApi = async () => {
+    const response = await fetch('/api/customers');
+    const body = await response.json();
+    return body;
+  };
+  useEffect(() => {
+    callApi()
+      .then((res) => setCustomers(res))
+      .catch((err) => console.log(err));
+  }, []);
+
   return (
     <Paper className={styles.classes.root}>
       <Table className={styles.classes.table}>
@@ -64,9 +49,11 @@ const App = (styles) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {customers.map((customer) => {
-            return <Customer key={customer.id} {...customer} />;
-          })}
+          {customers
+            ? customers.map((customer) => {
+                return <Customer key={customer.id} {...customer} />;
+              })
+            : ''}
         </TableBody>
       </Table>
     </Paper>
