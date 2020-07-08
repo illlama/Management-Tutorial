@@ -31,6 +31,14 @@ const App = (styles) => {
   const [customers, setCustomers] = useState('');
   const [completed, setCompleted] = useState(0);
 
+  const stateRefresh = () => {
+    setCustomers('');
+    setCompleted(0);
+    callApi()
+      .then((res) => setCustomers(res))
+      .catch((err) => console.log(err));
+  };
+
   const callApi = async () => {
     const response = await fetch('/api/customers');
     const body = await response.json();
@@ -80,7 +88,7 @@ const App = (styles) => {
           </TableBody>
         </Table>
       </Paper>
-      <CustomerAdd />
+      <CustomerAdd stateRefresh={stateRefresh} />
     </div>
   );
 };

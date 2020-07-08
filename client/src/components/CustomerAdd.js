@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { post } from 'axios';
 
-const CustomerAdd = () => {
+const CustomerAdd = ({ stateRefresh }) => {
   const [file, setFile] = useState(null);
   const [userName, setUserName] = useState('');
   const [birthday, setBirthday] = useState('');
@@ -28,14 +28,16 @@ const CustomerAdd = () => {
   };
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    addCustomer().then((res) => console.log(res.data));
+    addCustomer().then((res) => {
+      console.log(res.data);
+      stateRefresh();
+    });
     setFile(null);
     setFileName('');
     setUserName('');
     setBirthday('');
     setGender('');
     setJob('');
-    window.location.reload();
   };
 
   return (
