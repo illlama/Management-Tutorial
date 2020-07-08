@@ -67,12 +67,19 @@ const App = (styles) => {
               <TableCell>생년월일</TableCell>
               <TableCell>성별</TableCell>
               <TableCell>직업</TableCell>
+              <TableCell>설정</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {customers ? (
               customers.map((customer) => {
-                return <Customer key={customer.id} {...customer} />;
+                return (
+                  <Customer
+                    key={customer.id}
+                    stateRefresh={stateRefresh}
+                    {...customer}
+                  />
+                );
               })
             ) : (
               <TableRow>

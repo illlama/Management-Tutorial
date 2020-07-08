@@ -1,7 +1,9 @@
 import React from 'react';
+import CustomerDelete from './CustomerDelete';
+
 import { TableRow, TableCell } from '@material-ui/core';
 import '../App.css';
-const Customer = ({ ...customer }) => {
+const Customer = ({ stateRefresh, ...customer }) => {
   return (
     <TableRow>
       <TableCell>{customer.id}</TableCell>
@@ -12,6 +14,9 @@ const Customer = ({ ...customer }) => {
       <TableCell> {customer.birthday}</TableCell>
       <TableCell> {customer.gender}</TableCell>
       <TableCell>{customer.job}</TableCell>
+      <TableCell>
+        <CustomerDelete stateRefresh={stateRefresh} id={customer.id} />
+      </TableCell>
     </TableRow>
   );
 };
