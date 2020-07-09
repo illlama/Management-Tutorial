@@ -1,5 +1,20 @@
 import React, { useState } from 'react';
 import { post } from 'axios';
+import {
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  DialogContent,
+  TextField,
+  Button,
+} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles({
+  hidden: {
+    display: 'none',
+  },
+});
 
 const CustomerAdd = ({ stateRefresh }) => {
   const [file, setFile] = useState(null);
@@ -8,6 +23,8 @@ const CustomerAdd = ({ stateRefresh }) => {
   const [gender, setGender] = useState('');
   const [job, setJob] = useState('');
   const [fileName, setFileName] = useState('');
+  const [open, setOpen] = useState(false);
+  const classes = useStyles();
 
   const addCustomer = () => {
     const url = '/api/customers';
@@ -38,58 +55,99 @@ const CustomerAdd = ({ stateRefresh }) => {
     setBirthday('');
     setGender('');
     setJob('');
+    setOpen(false);
+  };
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setFile(null);
+    setFileName('');
+    setUserName('');
+    setBirthday('');
+    setGender('');
+    setJob('');
+    setOpen(false);
   };
 
   return (
-    <form onSubmit={handleFormSubmit}>
-      <h1> 고객 추가 </h1>
-      <br />
-      프로필 이미지 :
-      <input
-        type="file"
-        name="file"
-        file={file}
-        value={fileName}
-        onChange={(e) => {
-          setFile(e.target.files[0]);
-          setFileName(e.target.value);
-        }}
-      />
-      <br />
-      이름 :
-      <input
-        type="text"
-        name="userName"
-        value={userName}
-        onChange={(e) => setUserName(e.target.value)}
-      />
-      <br />
-      생년월일 :
-      <input
-        type="text"
-        name="birthday"
-        value={birthday}
-        onChange={(e) => setBirthday(e.target.value)}
-      />
-      <br />
-      성별
-      <input
-        type="text"
-        name="gender"
-        value={gender}
-        onChange={(e) => setGender(e.target.value)}
-      />
-      <br />
-      직업 :
-      <input
-        type="text"
-        name="job"
-        value={job}
-        onChange={(e) => setJob(e.target.value)}
-      />
-      <br />
-      <button type="submit">추가하기</button>
-    </form>
+    <div>
+      <Button variant="contained" color="primary" onClick={handleClickOpen}>
+        Add Customer
+      </Button>
+      <Dialog open={open} color="primary" onClose={handleClose}>
+        <DialogTitle>Add Customer</DialogTitle>
+        <DialogContent>
+          <input
+            className={classes.hidden}
+            accept="image/*"
+            id="raised-button-file"
+            type="file"
+            file={file}
+            value={fileName}
+            onChange={(e) => {
+              setFile(e.target.files[0]);
+              setFileName(e.target.value);
+            }}
+          />
+          <label htmlFor="raised-button-file">
+            <Button
+              variant="contained"
+              color="primary"
+              component="span"
+              name="file"
+            >
+              {fileName === '' ? '프로필 이미지 선택' : fileName}
+            </Button>
+          </label>
+          <br />
+          <TextField
+            label="이름"
+            type="text"
+            name="userName"
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
+          />
+          <br />
+          <TextField
+            label="생일"
+            type="text"
+            name="birthday"
+            value={birthday}
+            onChange={(e) => setBirthday(e.target.value)}
+          />
+          <br />
+          <TextField
+            label="성별"
+            type="text"
+            name="gender"
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
+          />
+          <br />
+          <TextField
+            label="직업"
+            type="text"
+            name="job"
+            value={job}
+            onChange={(e) => setJob(e.target.value)}
+          />
+          <br />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleFormSubmit}
+          >
+            Add
+          </Button>
+          <Button variant="outlined" color="primary" onClick={handleClose}>
+            close
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
   );
 };
 

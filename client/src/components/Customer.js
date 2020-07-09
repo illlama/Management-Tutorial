@@ -12,7 +12,7 @@ const Customer = ({ stateRefresh, ...customer }) => {
       </TableCell>
       <TableCell> {customer.name}</TableCell>
       <TableCell> {customer.birthday}</TableCell>
-      <TableCell> {customer.gender}</TableCell>
+      <TableCell> {customer.gender} </TableCell>
       <TableCell>{customer.job}</TableCell>
       <TableCell>
         <CustomerDelete stateRefresh={stateRefresh} id={customer.id} />

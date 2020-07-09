@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import axios from 'axios';
 import './App.css';
 import Customer from './components/Customer';
 import CustomerAdd from './components/CustomerAdd';
@@ -30,30 +31,46 @@ const styles = (theme) => ({
 const App = (styles) => {
   const [customers, setCustomers] = useState('');
   const [completed, setCompleted] = useState(0);
+  const [query, setQuery] = useState('customers');
+  // const getQueryUrl = useCallback(() => {
+  //   return '/api/' + query;
+  // }, [query]);
+  // const callApi = async () => {
+  //   const url = getQueryUrl();
+  //   const response = await fetch(url);
+  //   const body = await response.json();
+  //   return body;
+  // };
+  // const stateRefresh = () => {
+  //   setCustomers('');
+  //   setCompleted(0);
+  //   callApi()
+  //     .then((res) => setCustomers(res))
+  //     .catch((err) => console.log(err));
+  // };
 
-  const stateRefresh = () => {
-    setCustomers('');
-    setCompleted(0);
-    callApi()
-      .then((res) => setCustomers(res))
-      .catch((err) => console.log(err));
-  };
-
-  const callApi = async () => {
-    const response = await fetch('/api/customers');
-    const body = await response.json();
-    return body;
-  };
   const progress = () => {
     setCompleted((completed) => (completed >= 100 ? 0 : completed + 1));
   };
-
-  useEffect(() => {
+  const callApi = async () => {
     setInterval(progress, 15);
-    callApi()
-      .then((res) => setCustomers(res))
-      .catch((err) => console.log(err));
+    const response = await axios('/api/customers');
+    setCustomers(response.data);
+  };
+  const stateRefresh = () => {
+    setCustomers('');
+    setCompleted(0);
+    callApi();
+  };
+  useEffect(() => {
+    callApi();
   }, []);
+  // useEffect(async () => {
+
+  //   callApi()
+  //     .then((res) => setCustomers(res))
+  //     .catch((err) => console.log(err));
+  // }, [getQueryUrl]);
 
   return (
     <div>

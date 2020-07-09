@@ -1,4 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
+import {
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  DialogContent,
+  Button,
+  Typography,
+} from '@material-ui/core';
 
 const CustomerDelete = ({ id, stateRefresh }) => {
   const deleteCustomer = () => {
@@ -8,7 +16,13 @@ const CustomerDelete = ({ id, stateRefresh }) => {
     });
     stateRefresh();
   };
-  return <button onClick={() => deleteCustomer()}>Delete</button>;
+  return (
+    <div>
+      <Button variant="outlined" color="secondary" onClick={deleteCustomer}>
+        Delete
+      </Button>
+    </div>
+  );
 };
 
 export default CustomerDelete;
